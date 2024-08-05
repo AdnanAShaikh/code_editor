@@ -55,6 +55,11 @@ app.post("/js", async (req, res) => {
     res.json(error);
   }
 });
+
+// Catch-all handler to serve the React app for all other routes
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "build", "index.html"));
+});
 const PORT = process.env.PORT || 3715;
 
 app.listen(PORT, () => {

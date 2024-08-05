@@ -21,6 +21,7 @@ const generatePyFile = async (language, content) => {
   fs.writeFileSync(filepath, content);
   return filepath;
 };
+
 const generateJsFile = async (language, content) => {
   try {
     const job = uuid();
@@ -28,10 +29,10 @@ const generateJsFile = async (language, content) => {
     const filepath = path.join(dirJSCodes, filename);
 
     fs.writeFileSync(filepath, content);
-
     return filepath;
   } catch (error) {
-    console.log(error);
+    console.error("Error generating JS file:", error);
+    throw error;
   }
 };
 
@@ -42,9 +43,11 @@ const executePyFile = (filepathh) => {
 
     exec(`cd ${filepath} && python ${filename}.py`, (error, stdout, stderr) => {
       if (error) {
-        reject("Execution error ", error.message);
+        console.error("Execution error:", error.message);
+        reject(error.message);
       } else if (stderr) {
-        reject("Stderr: ", stderr);
+        console.error("Stderr:", stderr);
+        reject(stderr);
       } else {
         resolve(stdout);
       }
@@ -59,8 +62,10 @@ const executeJsFile = async (filepathh) => {
 
     exec(`cd ${filepath} && node ${filename}.js`, (error, stdout, stderr) => {
       if (error) {
-        reject("Error: ", error);
+        console.error("Execution error:", error.message);
+        reject(error.message);
       } else if (stderr) {
+        console.error("Stderr:", stderr);
         reject(stderr);
       } else {
         resolve(stdout);
