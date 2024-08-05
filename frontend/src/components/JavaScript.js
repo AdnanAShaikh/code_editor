@@ -48,14 +48,6 @@ const JavaScript = () => {
     };
   }, [input]);
 
-  const clearOutput = () => {
-    setOutput("");
-  };
-
-  const clearInput = () => {
-    setInput("");
-  };
-
   const clearAll = () => {
     setInput("");
     setOutput("");
@@ -72,10 +64,10 @@ const JavaScript = () => {
             </button>
           </Link>
           <button
-            onClick={clearInput}
+            onClick={clearAll}
             className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
           >
-            Clear Input
+            Clear
           </button>
           <h1 className="text-2xl font-bold">JavaScript Code Editor</h1>
           <button
@@ -95,15 +87,7 @@ const JavaScript = () => {
       </div>
       <div className="w-1/2 p-4">
         <div className="mx-6">
-          <h1 className="text-xl mb-4 mx-6">
-            Output{" "}
-            <button
-              onClick={clearOutput}
-              className="bg-blue-500 text-white px-2 py-2 mx-10 rounded hover:bg-blue-600"
-            >
-              Clear
-            </button>
-          </h1>{" "}
+          <h1 className="text-xl mb-4 mx-6">Output </h1>{" "}
         </div>
         <pre className="w-full h-full p-3 bg-white border rounded overflow-auto">
           {output}
