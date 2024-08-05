@@ -53,7 +53,8 @@ app.post("/js", async (req, res) => {
     res.json(error);
   }
 });
+const PORT = process.env.PORT || 3715;
 
-app.listen(5555, () => {
-  console.log("app server started on 5555");
+app.listen(PORT, () => {
+  console.log("app server started on ", PORT);
 });
