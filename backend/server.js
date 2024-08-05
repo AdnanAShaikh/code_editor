@@ -12,6 +12,12 @@ const app = express();
 app.use(cors());
 app.use(express.json()); // Add this line to parse JSON
 
+//deploy
+const path = require("path");
+
+app.use(express.static(path.join(__dirname, "build")));
+
+//routes
 app.get("/", (req, res) => {
   res.send("<h1>Welcome to code editor</h1>");
 });
