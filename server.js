@@ -9,8 +9,14 @@ const cors = require("cors");
 
 const app = express();
 
-app.use(cors());
+app.use(
+  cors({
+    origin: "https://code-editor-b2st.onrender.com/",
+  })
+);
 app.use(express.json()); // Add this line to parse JSON
+
+// const baseURL = process.env.NODE_ENV === 'production' ? 'https://code-editor-b2st.onrender.com' : 'http://localhost:5000';
 
 //deploy
 const path = require("path");

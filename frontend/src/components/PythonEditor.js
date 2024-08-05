@@ -16,9 +16,12 @@ const PythonEditor = () => {
     if (loading) toast.loading("Executing code...");
 
     try {
-      const response = await axios.post("http://localhost:5555/py", {
-        code: input,
-      });
+      const response = await axios.post(
+        "https://code-editor-b2st.onrender.com/py",
+        {
+          code: input,
+        }
+      );
 
       if (response.status === 200) {
         toast.dismiss();
