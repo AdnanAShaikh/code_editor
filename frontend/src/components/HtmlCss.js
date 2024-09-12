@@ -2,6 +2,7 @@ import React, { useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import "./HTML_CSS.css";
 import toast from "react-hot-toast";
+import Randomstring from "randomstring";
 
 const HtmlCss = ({ selectedIcon, setSelectedIcon }) => {
   const htmlCodeRef = useRef(null);
@@ -40,6 +41,32 @@ const HtmlCss = ({ selectedIcon, setSelectedIcon }) => {
     } catch (err) {
       toast.error("Failed to copy!");
     }
+  };
+
+  const codeToFile = () => {
+    toast.success("Download Started");
+
+    const text = `<!DOCTYPE html>
+      <html lang="en">
+        <head>
+          <meta charset="UTF-8" />
+          <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+          <style>${cssCodeRef.current.value}</style>
+          <title>Web App</title>
+       </head>
+
+       <body>${htmlCodeRef.current.value} </body> 
+       
+       </html> `;
+    const blob = new Blob([text], { type: "text/html" });
+
+    const link = document.createElement("a");
+
+    link.href = window.URL.createObjectURL(blob);
+    const FileCodeName = `${Randomstring.generate(5)}.html`;
+
+    link.download = FileCodeName;
+    link.click();
   };
 
   return (
@@ -138,6 +165,13 @@ const HtmlCss = ({ selectedIcon, setSelectedIcon }) => {
               </button>
               <button class="reload" onClick={clearAll}>
                 <img src={require("./clear-all-svgrepo-com.png")} alt="clear" />
+              </button>
+
+              <button class="download" onClick={codeToFile}>
+                <img
+                  src={require("./download-svgrepo-com.png")}
+                  alt="download"
+                />
               </button>
             </div>
           </nav>
