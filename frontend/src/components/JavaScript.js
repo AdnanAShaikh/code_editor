@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import toast, { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
 import { Link } from "react-router-dom";
 import randomstring from "randomstring";
 
 const JavaScript = ({ selectedIcon, setSelectedIcon }) => {
-  const [input, setInput] = useState("");
+  const [input, setInput] = useState(localStorage.getItem("js") || "");
   const [output, setOutput] = useState("");
 
   setSelectedIcon("js");
@@ -29,6 +29,7 @@ const JavaScript = ({ selectedIcon, setSelectedIcon }) => {
         toast.dismiss();
         setOutput(response.data.output);
         console.log(output);
+        localStorage.setItem("js", input);
         toast.success("Code executed successfully!");
       }
     } catch (error) {
@@ -39,26 +40,38 @@ const JavaScript = ({ selectedIcon, setSelectedIcon }) => {
 
   const handleCopy = async () => {
     try {
-      await navigator.clipboard.writeText(input); // Native Clipboard API
-      toast.success("Copied Input!");
+      if (input !== "") {
+        await navigator.clipboard.writeText(input); // Native Clipboard API
+        return toast.success("Copied Input!");
+      } else {
+        return toast.error("No Input");
+      }
     } catch (err) {
-      toast.error("Failed to copy!");
+      return toast.error("Failed to copy!");
     }
   };
 
   const codeToFile = () => {
-    toast.success("Download Started");
+    try {
+      if (input !== "") {
+        toast.success("Download Started");
 
-    const text = input;
-    const blob = new Blob([text], { type: "text/javascript" });
+        const text = input;
+        const blob = new Blob([text], { type: "text/javascript" });
 
-    const link = document.createElement("a");
+        const link = document.createElement("a");
 
-    link.href = window.URL.createObjectURL(blob);
-    const FileCodeName = `${randomstring.generate(5)}`;
+        link.href = window.URL.createObjectURL(blob);
+        const FileCodeName = `${randomstring.generate(5)}`;
 
-    link.download = FileCodeName;
-    link.click();
+        link.download = FileCodeName;
+        link.click();
+      } else {
+        return toast.error("No Input");
+      }
+    } catch (error) {
+      return toast.error("Failed to Download");
+    }
   };
 
   useEffect(() => {
@@ -92,7 +105,7 @@ const JavaScript = ({ selectedIcon, setSelectedIcon }) => {
           />
         </div>
 
-        <Link to="https://www.adnanshaikh.xyz">
+        <Link to="https://adnanashaikh.github.io/adnan-portfolio/">
           <div class="myport">
             <button>
               My Portfolio{" "}

@@ -82,15 +82,22 @@ section {
   box-shadow: 0px 0px 5px bisque;
 }
 
-.download {
-  background-color: #edf2f4;
-}
-
 /* input */
 .file-name {
   font-size: 1.3rem;
   margin-left: 2px;
 }
+
+.download {
+  background-color: #edf2f4;
+}
+
+.download:hover {
+  cursor: pointer;
+  background-color: bisque;
+  box-shadow: 0px 0px 5px bisque;
+}
+
 .input {
   width: 45%;
   background-color: #2b2d42;
@@ -121,8 +128,8 @@ section {
   background-color: bisque;
   box-shadow: 0px 0px 5px bisque;
 }
-/* input nav */
 
+/* input nav */
 nav {
   padding: 4px;
   border: 1px solid #edf2f4;
@@ -133,12 +140,12 @@ nav {
 
 .nav-button {
   display: flex;
-  width: 40%;
+  min-width: 60%;
   gap: 2rem;
 }
 
 .nav-file {
-  width: 60%;
+  min-width: 40%;
   display: flex;
   color: #edf2f4;
   align-items: center;

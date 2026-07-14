@@ -11,6 +11,18 @@ const HtmlCss = ({ selectedIcon, setSelectedIcon }) => {
 
   setSelectedIcon("html");
 
+  useEffect(() => {
+    if (htmlCodeRef.current && localStorage.getItem("html") !== null) {
+      htmlCodeRef.current.value = localStorage.getItem("html");
+    }
+
+    if (cssCodeRef.current && localStorage.getItem("css") !== null) {
+      cssCodeRef.current.value = localStorage.getItem("css");
+    }
+    resultRef.current.contentDocument.body.innerHTML =
+      `<style>${cssCodeRef.current.value}</style>` + htmlCodeRef.current.value;
+  }, []);
+
   const clearAll = () => {
     htmlCodeRef.current.value = "";
     cssCodeRef.current.value = "";
@@ -22,6 +34,8 @@ const HtmlCss = ({ selectedIcon, setSelectedIcon }) => {
       resultRef.current.contentDocument.body.innerHTML =
         `<style>${cssCodeRef.current.value}</style>` +
         htmlCodeRef.current.value;
+      localStorage.setItem("html", htmlCodeRef.current.value);
+      localStorage.setItem("css", cssCodeRef.current.value);
     };
 
     htmlCodeRef.current.onkeyup = updateOutput;
@@ -44,9 +58,9 @@ const HtmlCss = ({ selectedIcon, setSelectedIcon }) => {
   };
 
   const codeToFile = () => {
-    toast.success("Download Started");
-
-    const text = `<!DOCTYPE html>
+    if (htmlCodeRef.current.value !== "" || cssCodeRef.current.value !== "") {
+      toast.success("Download Started");
+      const text = `<!DOCTYPE html>
       <html lang="en">
         <head>
           <meta charset="UTF-8" />
@@ -58,15 +72,18 @@ const HtmlCss = ({ selectedIcon, setSelectedIcon }) => {
        <body>${htmlCodeRef.current.value} </body> 
        
        </html> `;
-    const blob = new Blob([text], { type: "text/html" });
+      const blob = new Blob([text], { type: "text/html" });
 
-    const link = document.createElement("a");
+      const link = document.createElement("a");
 
-    link.href = window.URL.createObjectURL(blob);
-    const FileCodeName = `${Randomstring.generate(5)}.html`;
+      link.href = window.URL.createObjectURL(blob);
+      const FileCodeName = `${Randomstring.generate(5)}.html`;
 
-    link.download = FileCodeName;
-    link.click();
+      link.download = FileCodeName;
+      link.click();
+    } else {
+      toast.error("No Input");
+    }
   };
 
   return (
@@ -81,7 +98,7 @@ const HtmlCss = ({ selectedIcon, setSelectedIcon }) => {
           />
         </div>
 
-        <Link to="https://www.adnanshaikh.xyz">
+        <Link to="https://adnanashaikh.github.io/adnan-portfolio/">
           <div class="myport">
             <button>
               My Portfolio{" "}

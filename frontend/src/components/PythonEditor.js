@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import Randomstring from "randomstring";
 
 const PythonEditor = ({ selectedIcon, setSelectedIcon }) => {
-  const [input, setInput] = useState("");
+  const [input, setInput] = useState(localStorage.getItem("python") || "");
   const [output, setOutput] = useState("");
   const [loading, setLoading] = useState(true);
 
@@ -13,8 +13,12 @@ const PythonEditor = ({ selectedIcon, setSelectedIcon }) => {
 
   const handleCopy = async () => {
     try {
-      await navigator.clipboard.writeText(input); // Native Clipboard API
-      toast.success("Copied Input!");
+      if (input !== "") {
+        await navigator.clipboard.writeText(input); // Native Clipboard API
+        toast.success("Copied Input!");
+      } else {
+        return toast.error("No Input");
+      }
     } catch (err) {
       toast.error("Failed to copy!");
     }
@@ -38,6 +42,7 @@ const PythonEditor = ({ selectedIcon, setSelectedIcon }) => {
       if (response.status === 200) {
         toast.dismiss();
         setOutput(response.data.output);
+        localStorage.setItem("python", input);
         toast.success("Code executed successfully!");
       }
     } catch (error) {
@@ -66,16 +71,24 @@ const PythonEditor = ({ selectedIcon, setSelectedIcon }) => {
   };
 
   const codeToFile = () => {
-    toast.success("Download Started");
+    try {
+      if (input !== "") {
+        toast.success("Download Started");
 
-    const text = input;
-    const blob = new Blob([text], { type: "text/python" });
+        const text = input;
+        const blob = new Blob([text], { type: "text/python" });
 
-    const link = document.createElement("a");
+        const link = document.createElement("a");
 
-    link.href = window.URL.createObjectURL(blob);
-    link.download = `${Randomstring.generate(5)}.py`;
-    link.click();
+        link.href = window.URL.createObjectURL(blob);
+        link.download = `${Randomstring.generate(5)}.py`;
+        link.click();
+      } else {
+        return toast.error("No Input");
+      }
+    } catch (error) {
+      return toast.error("Failed to Download");
+    }
   };
 
   return (
@@ -90,7 +103,7 @@ const PythonEditor = ({ selectedIcon, setSelectedIcon }) => {
           />
         </div>
 
-        <Link to="https://www.adnanshaikh.xyz">
+        <Link to="https://adnanashaikh.github.io/adnan-portfolio/">
           <div class="myport">
             <button>
               My Portfolio{" "}
