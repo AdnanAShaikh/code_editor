@@ -43,11 +43,16 @@ const executePyFile = (filepathh) => {
 
     exec(`cd ${filepath} && python ${filename}.py`, (error, stdout, stderr) => {
       if (error) {
-        console.error("Execution error:", error.message);
-        reject(error.message);
+      const clean = error.message
+          .replace(/^Command failed:.*\n?/, "")
+          .replace(/File ".*"\s*,\s*/, "")
+          .trim();
+        reject(clean);
       } else if (stderr) {
-        console.error("Stderr:", stderr);
-        reject(stderr);
+        const clean = stderr
+          .replace(/File ".*[\\\/]/, 'File "')
+          .trim();
+        reject(clean);
       } else {
         resolve(stdout);
       }
@@ -62,11 +67,20 @@ const executeJsFile = async (filepathh) => {
 
     exec(`cd ${filepath} && node ${filename}.js`, (error, stdout, stderr) => {
       if (error) {
-        console.error("Execution error:", error.message);
-        reject(error.message);
+        const clean = error.message
+          .replace(/^Command failed:.*\n?/, "")
+          .replace(/.*[\\\/][\w-]+\.js:\d*/g, "")
+          .replace(/at .+\n?/g, "")
+          .replace(/Node\.js v[\d.]+/g, "")
+          .trim();
+        reject(clean);
       } else if (stderr) {
-        console.error("Stderr:", stderr);
-        reject(stderr);
+        const clean = stderr
+          .replace(/.*[\\\/][\w-]+\.js:\d*/g, "")
+          .replace(/at .+\n?/g, "")
+          .replace(/Node\.js v[\d.]+/g, "")
+          .trim();
+        reject(clean);
       } else {
         resolve(stdout);
       }
