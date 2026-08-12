@@ -18,8 +18,7 @@ app.use(express.json()); // Add this line to parse JSON
 //deploy
 const path = require("path");
 
-app.use(express.static(path.join(__dirname, "build")));
-
+app.use(express.static(path.join(__dirname, "frontend", "dist")));
 //routes
 app.get("/", (req, res) => {
   res.send("<h1>Welcome to code editor</h1>");
