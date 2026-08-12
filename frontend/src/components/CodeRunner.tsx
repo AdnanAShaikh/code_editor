@@ -31,7 +31,7 @@ const LANGUAGES: Record<Language, LanguageConfig> = {
   js: {
     name: "JavaScript",
     fileName: "index.js",
-    endpoint: "http://localhost:3715/js",
+    endpoint: "/js",
     storageKey: "js",
     placeholder: `console.log("Hello! World")`,
     mimeType: "text/javascript",
@@ -40,7 +40,7 @@ const LANGUAGES: Record<Language, LanguageConfig> = {
   python: {
     name: "Python",
     fileName: "index.py",
-    endpoint: "http://localhost:3715/py",
+    endpoint: "/py",
     storageKey: "python",
     placeholder: `print("Hello! World")`,
     mimeType: "text/python",

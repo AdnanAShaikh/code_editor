@@ -58,9 +58,8 @@ app.post("/js", async (req, res) => {
 
 // Catch-all handler to serve the React app for all other routes
 app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "build", "index.html"));
+  res.sendFile(path.join(__dirname, "frontend", "dist", "index.html"));
 });
-
 
 
 const http = require("http");
