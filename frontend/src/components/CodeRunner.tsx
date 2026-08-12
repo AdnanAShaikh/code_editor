@@ -4,8 +4,18 @@ import toast from "react-hot-toast";
 import { PythonIcon } from "../Icons/PythonIcon";
 import { JavaScriptIcon } from "../Icons/JavaScriptIcon";
 import { socket } from "../socket";
+import CodeMirror from "@uiw/react-codemirror";
+import { javascript } from "@codemirror/lang-javascript";
+import { python } from "@codemirror/lang-python";
+import { tokyoNight } from "@uiw/codemirror-theme-tokyo-night";
+
 
 type Language = "js" | "python";
+
+const LANG_EXTENSIONS: Record<Language, ReturnType<typeof javascript>> = {
+  js: javascript(),
+  python: python(),
+};
 
 interface LanguageConfig {
   name: string;
@@ -113,21 +123,6 @@ const CodeRunner: React.FC = () => {
     setInput(localStorage.getItem(LANGUAGES[lang].storageKey) || "");
     setOutput("");
   };
-
-
-  useEffect(() => {
-    const handleKeyPress = (e: KeyboardEvent) => {
-      if (e.ctrlKey && e.key === "Enter") {
-        runCode();
-      }
-    };
-
-    window.addEventListener("keydown", handleKeyPress);
-
-    return () => {
-      window.removeEventListener("keydown", handleKeyPress);
-    };
-  }, [input, language]);
 
 
   const runCode = async (): Promise<void> => {
@@ -572,7 +567,7 @@ const CodeRunner: React.FC = () => {
           />
           {username && (
             <span className="text-[1.2rem] mt-2 [text-shadow:none] opacity-80">
-            Hi! {username}
+            Hi, {username}
             </span>
         )}
         </div>
@@ -674,18 +669,30 @@ const CodeRunner: React.FC = () => {
             </div>
           </nav>
 
-          <textarea
-            className="p-[2px] m-[3px] min-w-[99%] min-h-[93%] text-base bg-white text-black focus:outline-2 focus:outline-[bisque] focus:border-[#2b2d42] focus:shadow-none"
+        <CodeMirror
             value={input}
-            onChange={(e) => {
-                setInput(e.target.value);
+            height="100%"
+            theme={tokyoNight}
+            extensions={[LANG_EXTENSIONS[language]]}
+            placeholder={config.placeholder}
+            autoFocus
+            onChange={(value) => {
+                setInput(value);
                 if (roomId) {
-                    socket.emit("code-change", { roomId, code: e.target.value });
+                socket.emit("code-change", { roomId, code: value });
                 }
             }}
-            autoFocus
-            placeholder={config.placeholder}
-          ></textarea>
+            basicSetup={{
+                lineNumbers: true,
+                highlightActiveLine: true,
+                highlightActiveLineGutter: true,
+                foldGutter: true,
+                autocompletion: true,
+                bracketMatching: true,
+                closeBrackets: true,
+            }}
+            className="h-[93%] m-[3px] text-base"
+            />
         </div>
 
         <div className="w-1/2 bg-[#2b2d42] text-[#edf2f4] border-t-2 border-b-[3px] border-r-[3px] border-[#edf2f4]">
@@ -693,9 +700,9 @@ const CodeRunner: React.FC = () => {
             Output
           </p>
           <div>
-            <p className="text-[1.2rem] p-[2px] m-[2px] min-w-[99%] min-h-[93%]">
+            <pre className="text-[1.2rem] p-[2px] m-[2px] min-w-[99%] min-h-[93%] whitespace-pre-wrap font-mono">
               {output}
-            </p>
+            </pre>
           </div>
         </div>
       </section>
